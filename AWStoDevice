@@ -1,0 +1,39 @@
+import os
+import sys
+from datetime import datetime
+from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
+import time
+
+CA_PATH = "AmazonRootCA1.pem"
+PRIVATE_KEY_PATH="98f510b5df-private.pem.key"
+CERTIFICATE_PATH="98f510b5df-certificate.pem.crt"
+
+def test_cb(self,params,packet):
+    print(packet.payload)
+    f=open('log.log','a+')
+    f.write(packet.payload + ' /'+str(datetime.now()))
+    f.write('\n')
+    f.close()
+
+
+
+myMQTTClient = AWSIoTMQTTClient("myClientID")
+
+myMQTTClient.configureEndpoint("ahj3qmq1kli5n-ats.iot.ap-south-1.amazonaws.com",8883)
+myMQTTClient.configureCredentials(CA_PATH,PRIVATE_KEY_PATH,CERTIFICATE_PATH)
+
+myMQTTClient.configureAutoReconnectBackoffTime(1,32,20)
+myMQTTClient.configureOfflinePublishQueueing(-1)
+myMQTTClient.configureDrainingFrequency(2)
+myMQTTClient.configureConnectDisconnectTimeout(10)
+myMQTTClient.configureMQTTOperationTimeout(5)
+
+ 	 	print("Connect")
+myMQTTClient.connect()
+myMQTTClient.subscribe("pfc/test",1,test_cb)
+
+while True:
+    None
+
+myMQTTClient.unsubscribe("pfc/test")
+myMQTTClient.disconnect()
