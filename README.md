@@ -38,4 +38,10 @@ Target function  publishTOLEDTOOFF
 5)	Lambda function
 publishToLED.py:
 Role: All
+Topic :test/pub
+
+Same way publishToLEDToOFF
+
+Status =0
+
 
